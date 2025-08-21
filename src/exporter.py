@@ -10,11 +10,11 @@ from celery import Celery
 from celery.events.state import State  # type: ignore
 from celery.utils import nodesplit  # type: ignore
 from celery.utils.time import utcoffset  # type: ignore
+from kombu import serialization  # type: ignore
 from kombu.exceptions import ChannelError  # type: ignore
 from loguru import logger
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
 
-from .cards_gateway_json import register_minimal_cards_gateway_serializers
 from .http_server import start_http_server
 
 
@@ -363,7 +363,14 @@ class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branche
             accept_content_list = click_params["accept_content"].split(",")
             logger.info("Setting celery accept_content {}", accept_content_list)
             if "gatewayjson" in accept_content_list:
-                register_minimal_cards_gateway_serializers()
+                # gatewayjson can be handled by standard json loading for purposes of monitoring
+                serialization.register(
+                    "gatewayjson",
+                    json.dumps,
+                    json.loads,
+                    content_type="application/x-gatewayjson",
+                    content_encoding="utf-8",
+                )
                 logger.info("Registered minimal Cards Gateway serializers with Kombu")
             self.app.config_from_object(dict(accept_content=accept_content_list))
         transport_options = {}
