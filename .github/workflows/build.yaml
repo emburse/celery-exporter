@@ -1,17 +1,10 @@
 # reusable workflow that builds docker image and optionally pushes it to registry
 on:
-  workflow_call:
-    inputs:
-      environment:
-        description: 'environment to build for'
-        required: false
-        default: 'test'
-        type: string
-    outputs:
-      image_tag:
-        value: ${{ jobs.build.outputs.image_tag }}
-      environment:
-        value: ${{ jobs.build.outputs.environment }}
+
+  push:
+    branches:
+      - master
+
 
 jobs:
   build:
@@ -19,7 +12,6 @@ jobs:
     name: Build image
     outputs:
       image_tag: ${{ env.commit_sha }}
-      environment: ${{ inputs.environment }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
