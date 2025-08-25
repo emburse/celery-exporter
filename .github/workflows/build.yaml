@@ -1,6 +1,8 @@
 # reusable workflow that builds docker image and optionally pushes it to registry
 on:
 
+  workflow_dispatch:
+    
   push:
     branches:
       - master
