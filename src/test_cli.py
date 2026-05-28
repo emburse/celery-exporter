@@ -108,6 +108,10 @@ def test_integration(broker, celery_app, threaded_exporter, hostname):
         f'celery_task_runtime_count{{hostname="{hostname}",name="src.test_cli.succeed",queue_name="celery"}} 2.0'
         in res.text
     )
+    assert (
+        f'celery_task_runtime_v2_seconds_count{{hostname="{hostname}",name="src.test_cli.succeed",queue_name="celery"}} 2.0'
+        in res.text
+    )
     assert 'celery_queue_length{queue_name="celery"} 0.0' in res.text
 
     # TODO: Fix this...
@@ -267,6 +271,10 @@ def test_integration_static_labels(
     )
     assert (
         f'celery_task_runtime_count{{hostname="{hostname}",name="src.test_cli.succeed",queue_name="celery",{static_labels_str}}} 2.0'
+        in res.text
+    )
+    assert (
+        f'celery_task_runtime_v2_seconds_count{{hostname="{hostname}",name="src.test_cli.succeed",queue_name="celery",{static_labels_str}}} 2.0'
         in res.text
     )
     assert (
