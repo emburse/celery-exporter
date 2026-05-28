@@ -17,6 +17,11 @@ from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
 
 from .http_server import start_http_server
 
+TASK_RUNTIME_V2_BUCKETS = (
+    0.1, 0.5, 1, 2, 5, 10, 30, 60, 120, 300, 600,
+    1200, 1800, 2700, 3600, 5400, 7200, 10800, 14400,
+)
+
 
 class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branches
     state: State = None
@@ -123,6 +128,13 @@ class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branche
             registry=self.registry,
             buckets=buckets or Histogram.DEFAULT_BUCKETS,
         )
+        self.celery_task_runtime_v2 = Histogram(
+            f"{metric_prefix}task_runtime_v2_seconds",
+            "Histogram of task runtime measurements with extended buckets for long-running tasks (seconds).",
+            ["name", "hostname", "queue_name", *self.static_label_keys],
+            registry=self.registry,
+            buckets=TASK_RUNTIME_V2_BUCKETS,
+        )
         self.celery_queue_length = Gauge(
             f"{metric_prefix}queue_length",
             "The number of message in broker queue.",
@@ -194,6 +206,10 @@ class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branche
         for label_seq in list(self.celery_task_runtime._metrics.keys()):
             if hostname in label_seq:
                 self.celery_task_runtime.remove(*label_seq)
+
+        for label_seq in list(self.celery_task_runtime_v2._metrics.keys()):
+            if hostname in label_seq:
+                self.celery_task_runtime_v2.remove(*label_seq)
 
         del self.worker_last_seen[hostname]
 
@@ -314,6 +330,13 @@ class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branche
             logger.debug(
                 "Observed metric='{}' labels='{}': {}s",
                 self.celery_task_runtime._name,
+                labels,
+                task.runtime,
+            )
+            self.celery_task_runtime_v2.labels(**labels).observe(task.runtime)
+            logger.debug(
+                "Observed metric='{}' labels='{}': {}s",
+                self.celery_task_runtime_v2._name,
                 labels,
                 task.runtime,
             )
