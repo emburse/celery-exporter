@@ -7,6 +7,7 @@ from requests.exceptions import HTTPError
 
 
 @pytest.mark.celery()
+# pylint: disable=too-many-statements
 def test_integration(broker, celery_app, threaded_exporter, hostname):
     exporter_url = f"http://localhost:{threaded_exporter.cfg['port']}/metrics"
 

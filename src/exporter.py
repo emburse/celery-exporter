@@ -147,6 +147,7 @@ class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branche
         )
         self.celery_task_runtime_v2 = Histogram(
             f"{metric_prefix}task_runtime_v2_seconds",
+            # pylint: disable=line-too-long
             "Histogram of task runtime measurements with extended buckets for long-running tasks (seconds).",
             ["name", "hostname", "queue_name", *self.static_label_keys],
             registry=self.registry,
