@@ -20,11 +20,9 @@ jobs:
           python-version: 3.13
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        uses: abatilo/actions-poetry@v3
         with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
+          poetry-version: latest
 
       - name: Load cached venv
         id: cached-poetry-dependencies
@@ -75,11 +73,9 @@ jobs:
           python-version: 3.13
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1
+        uses: abatilo/actions-poetry@v3
         with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
+          poetry-version: latest
 
       - name: Load cached venv
         id: cached-poetry-dependencies
