@@ -23,7 +23,6 @@ classifiers = [
 ]
 
 [tool.black]
-skip_numeric_underscore_normalization = true
 exclude = ".*(venv|virtualenv|.poetry|migrations|node_modules)"
 
 [tool.isort]

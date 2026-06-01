@@ -18,8 +18,25 @@ from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
 from .http_server import start_http_server
 
 TASK_RUNTIME_V2_BUCKETS = (
-    0.1, 0.5, 1, 2, 5, 10, 30, 60, 120, 300, 600,
-    1200, 1800, 2700, 3600, 5400, 7200, 10800, 14400,
+    0.1,
+    0.5,
+    1,
+    2,
+    5,
+    10,
+    30,
+    60,
+    120,
+    300,
+    600,
+    1200,
+    1800,
+    2700,
+    3600,
+    5400,
+    7200,
+    10800,
+    14400,
 )
 
 
@@ -130,6 +147,7 @@ class Exporter:  # pylint: disable=too-many-instance-attributes,too-many-branche
         )
         self.celery_task_runtime_v2 = Histogram(
             f"{metric_prefix}task_runtime_v2_seconds",
+            # pylint: disable=line-too-long
             "Histogram of task runtime measurements with extended buckets for long-running tasks (seconds).",
             ["name", "hostname", "queue_name", *self.static_label_keys],
             registry=self.registry,
