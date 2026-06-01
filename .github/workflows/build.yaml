@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Build image
     outputs:
       image_tag: ${{ env.commit_sha }}
