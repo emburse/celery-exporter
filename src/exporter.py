@@ -18,8 +18,25 @@ from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram
 from .http_server import start_http_server
 
 TASK_RUNTIME_V2_BUCKETS = (
-    0.1, 0.5, 1, 2, 5, 10, 30, 60, 120, 300, 600,
-    1200, 1800, 2700, 3600, 5400, 7200, 10800, 14400,
+    0.1,
+    0.5,
+    1,
+    2,
+    5,
+    10,
+    30,
+    60,
+    120,
+    300,
+    600,
+    1200,
+    1800,
+    2700,
+    3600,
+    5400,
+    7200,
+    10800,
+    14400,
 )
 
 
